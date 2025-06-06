@@ -1,6 +1,5 @@
 #include "ACTIVIDAD.h"
 #include "stm32f103xb.h"
-#include <stdbool.h>
 
 #define MUX1_IN_0 0
 #define MUX1_IN_1 1
@@ -99,9 +98,10 @@ void cont(){
         for(int i=0; i<4; i++){
             GPIOA->BSRR |= (1 << outs[i]+16);
         }
-        GPIOA->BSRR |= (1 << outs[pos]+16);
+        GPIOA->BSRR |= (1 << outs[pos]);
         pos++;
         pos=pos%4;
+        delay_ms(500);
     }
 }
 void sum(){
@@ -110,4 +110,12 @@ void sum(){
     uint16_t est_b0 = GPIOA -> IDR&(1<<SUM_B0);
     uint16_t est_b1 = GPIOA -> IDR&(1<<SUM_B1);
     uint16_t est_cin = GPIOA -> IDR&(1<<SUM_CIN);
+    
+    int AB_0= est_a0 + est_b0;
+    int AB_1= est_a1 + est_b1;
+    int suma= AB_0+AB_1;
+    //PREGUNAT POR CARRYS//
+    
+
+
 }
