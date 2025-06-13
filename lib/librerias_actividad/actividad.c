@@ -110,12 +110,33 @@ void sum(){
     uint16_t est_b0 = GPIOA -> IDR&(1<<SUM_B0);
     uint16_t est_b1 = GPIOA -> IDR&(1<<SUM_B1);
     uint16_t est_cin = GPIOA -> IDR&(1<<SUM_CIN);
-    
-    int AB_0= est_a0 + est_b0;
-    int AB_1= est_a1 + est_b1;
-    int suma= AB_0+AB_1;
-    //PREGUNAT POR CARRYS//
-    
 
-
+    int aux=0;
+    
+    if(est_a0==est_b0){
+        GPIOB->BSRR |= (1 <<(SUM_Z0+16));
+    }else{
+        GPIOB->BSRR |= (1 <<SUM_Z0);
+    }
+    if(est_a1== est_b1){ 
+        if(est_a0 && est_b0){ //Si est_a0 y est_b0 es 0
+            GPIOB->BSRR |= (1 <<SUM_Z1);
+        }else{
+            GPIOB->BSRR |= (1 <<(SUM_Z1+16));
+        }
+    }else{
+        if(est_a1 || est_b1){ //Si est_a1 o est_b1 es 1
+            if(est_a0 && est_b0){ 
+                GPIOB->BSRR |= (1 <<(SUM_Z1+16));
+                aux=1;
+            }else{
+                GPIOB->BSRR |= (1 <<SUM_Z1);
+            }
+        }
+    }
+    if(est_cin == (aux)){
+        GPIOB->BSRR |= (1 <<(SUM_COUT+16));
+    }else{
+        GPIOB->BSRR |= (1 <<SUM_COUT);
+    }
 }
